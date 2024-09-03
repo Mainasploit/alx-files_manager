@@ -30,41 +30,76 @@ class DBClient {
 
   async getCollection(collectionName) {
     if (!this.isAlive()) {
-      await this.connect();
+      try {
+        await this.connect();
+      } catch (err) {
+        console.error('Failed to reconnect to the database:', err.message);
+        throw err;
+      }
     }
     return this.client.db(this.database).collection(collectionName);
   }
 
   async nbUsers() {
-    const usersCollection = await this.getCollection('users');
-    return usersCollection.countDocuments();
+    try {
+      const usersCollection = await this.getCollection('users');
+      return await usersCollection.countDocuments();
+    } catch (err) {
+      console.error('Error counting users:', err.message);
+      throw err;
+    }
   }
 
   async nbFiles() {
-    const filesCollection = await this.getCollection('files');
-    return filesCollection.countDocuments();
+    try {
+      const filesCollection = await this.getCollection('files');
+      return await filesCollection.countDocuments();
+    } catch (err) {
+      console.error('Error counting files:', err.message);
+      throw err;
+    }
   }
 
   async createUser(email, password) {
-    const usersCollection = await this.getCollection('users');
-    const hashedPwd = pwdHashed(password);
-    const result = await usersCollection.insertOne({ email, password: hashedPwd });
-    return result;
+    try {
+      const usersCollection = await this.getCollection('users');
+      const hashedPwd = pwdHashed(password);
+      const result = await usersCollection.insertOne({ email, password: hashedPwd });
+      return result;
+    } catch (err) {
+      console.error('Error creating user:', err.message);
+      throw err;
+    }
   }
 
   async getUser(email) {
-    const usersCollection = await this.getCollection('users');
-    return usersCollection.findOne({ email });
+    try {
+      const usersCollection = await this.getCollection('users');
+      return await usersCollection.findOne({ email });
+    } catch (err) {
+      console.error('Error fetching user by email:', err.message);
+      throw err;
+    }
   }
 
   async getUserById(id) {
-    const usersCollection = await this.getCollection('users');
-    return usersCollection.findOne({ _id: new ObjectId(id) });
+    try {
+      const usersCollection = await this.getCollection('users');
+      return await usersCollection.findOne({ _id: new ObjectId(id) });
+    } catch (err) {
+      console.error('Error fetching user by ID:', err.message);
+      throw err;
+    }
   }
 
   async userExist(email) {
-    const user = await this.getUser(email);
-    return !!user;
+    try {
+      const user = await this.getUser(email);
+      return !!user;
+    } catch (err) {
+      console.error('Error checking if user exists:', err.message);
+      throw err;
+    }
   }
 }
 
