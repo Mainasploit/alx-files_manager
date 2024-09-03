@@ -1,14 +1,14 @@
 #!/usr/bin/node
 
 const express = require('express');
-const router = require('./routes/index');
+const routes = require('./routes/index');
 
-const server = express();
-const PORT = process.env.PORT ? process.env.PORT : 5000;
+const appServer = express();
+const SERVER_PORT = process.env.PORT ? process.env.PORT : 5000;
 
-server.use(express.json());
-server.use(router);
+appServer.use(express.json());
+appServer.use(routes);
 
-server.listen(PORT, () =>
-  console.log(`The server is running on port: ${PORT}`)
+appServer.listen(SERVER_PORT, () =>
+  console.log(`Maina's server is up and running on port: ${SERVER_PORT}`)
 );
