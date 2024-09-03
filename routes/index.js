@@ -7,10 +7,18 @@ const AppController = require('../controllers/AppController');
 
 const router = express.Router();
 
-router.get('/status', AppController.getStatus);
-router.get('/stats', AppController.getStats);
-router.post('/users', UsersController.postNew);
-router.get('/connect', AuthController.getConnect);
-router.get('/disconnect', AuthController.getDisconnect);
-router.get('/users/me', AuthController.getMe);
+// Health check and system status
+router.get('/health', AppController.getStatus);  // Changed route from /status to /health
+router.get('/system-stats', AppController.getStats);  // Changed route from /stats to /system-stats
+
+// User management routes
+router.post('/register', UsersController.registerUser);  // Changed route from /users to /register
+
+// Authentication routes
+router.post('/login', AuthController.getConnect);  // Changed route from /connect to /login
+router.post('/logout', AuthController.getDisconnect);  // Changed route from /disconnect to /logout
+
+// User profile routes
+router.get('/profile', AuthController.getMe);  // Changed route from /users/me to /profile
+
 module.exports = router;
